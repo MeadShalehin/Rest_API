@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 
-class UserDob{
+class UserDob {
   final DateTime date;
   final int age;
 
-  UserDob( {
+  UserDob({
     required this.age,
     required this.date
   });
