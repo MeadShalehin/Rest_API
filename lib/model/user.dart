@@ -5,14 +5,12 @@ import 'package:rest_api/model/user_phone.dart';
 import 'package:rest_api/model/user_picture.dart';
 
 class User {
-  final String picture;
+  final dynamic picture;
   final UserName name;
   final String gender;
   final String email;
   final String phone;
-  //final String cell;
-  //final UserDob dob;
-  final UserLocation location;
+  final dynamic location;
   final String nat;
 
   User({
@@ -21,38 +19,23 @@ class User {
     required this.gender,
     required this.email,
     required this.phone,
-    //cell: e['cell'],
-    //dob: e['dob'],
     required this.location,
     required this.nat,
   });
 
-  factory User.fromMap(Map<String, dynamic> e) {
-    final picture = UserPicture.fromMap(e['picture']);
-    final name = UserName.fromMap(e['name']);
-    final gender = e['gender'];
-    final email = e['email'];
-    final phone = UserPhone.fromMap(e['phone']);
-   // final date = e['dob']['date'];
-   // final dob = UserDob.fromMap(e['dob']);
-    final location = UserLocation.fromMap(e['location']);
-    final nat = e['nat'];
-
-
+  factory User.fromMap(Map<String, dynamic> json) {
     return User(
-      picture: e['picture'],
-      name: e['name'],
-      gender: e['gender'],
-      email: e['email'],
-      phone: e['phone'],
-      //cell: e['cell'],
-      //dob: e['dob'],
-      location: e['location'],
-      nat: e['nat'],
+      picture: json['picture'],
+      name: UserName(
+        title: json['name']['title'],
+        first: json['name']['first'],
+        last: json['name']['last'],
+      ),
+      gender: json['gender'],
+      email: json['email'],
+      phone: json['phone'],
+      location: json['location'],
+      nat: json['nat'],
     );
-  }
-
-  String get fullName {
-    return '${name.title} ${name.first} ${name.last}';
   }
 }

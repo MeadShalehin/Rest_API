@@ -37,30 +37,47 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Rest API Call"),
       ),
-      body: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-          final picture = user.picture;
-          final fullName =
-              '${user.name.title} ${user.name.first} ${user.name.last}';
-          final color =
-              user.gender == 'female' ? Colors.deepOrange : Colors.pinkAccent;
-          final email = user.email;
-          final phone = user.phone;
-          final location = user.location;
-          final nat = user.nat;
+      body: users.isEmpty
+          ? const Center(
+              child: Text("No data available. Tap the button to load users."))
+          : ListView.builder(
+              itemCount: users.length,
+              itemBuilder: (context, index) {
+                final user = users[index];
+                final picture =
+                    user.picture['large']; // Changed: Access picture properly
+                final fullName =
+                    '${user.name.title} ${user.name.first} ${user.name.last}'; // Changed: Use user.name fields
+                final color = user.gender == 'female'
+                    ? Colors.deepOrange
+                    : Colors.pinkAccent;
+                final email = user.email;
+                final phone = user.phone;
+                final location =
+                    '${user.location['city']}, ${user.location['country']}'; // Changed: Access location as map
+                final nat = user.nat;
 
-          return ListTile(
-            title: Text(
-              fullName,
-              style: TextStyle(color: color),
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage:
+                        NetworkImage(picture), // Changed: Use profile picture
+                  ),
+                  title: Text(
+                    fullName,
+                    style: TextStyle(color: color),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Email: $email'), // Added: Display email
+                      Text('Phone: $phone'), // Added: Display phone
+                      Text('Location: $location'), // Added: Display location
+                    ],
+                  ),
+                  isThreeLine: true, // Changed: Enable multi-line subtitle
+                );
+              },
             ),
-            subtitle:
-                Text(fullName), // Display the user's full name as a subtitle
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: fetchUsers,
         child: const Icon(Icons.download),
@@ -69,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// Move UserApi to a standalone class
+// Changes in UserApi
 class UserApi {
   Future<List<User>> fetchUsers() async {
     const url = 'https://randomuser.me/api/?results=20';
@@ -82,14 +99,16 @@ class UserApi {
       final results = json['results'] as List<dynamic>;
       final users = results.map((e) {
         return User(
-          picture: e['picture'],
-          name: e['name'],
+          picture: e['picture'], // No change
+          name: UserName(
+            title: e['name']['title'], // Changed: Parse UserName correctly
+            first: e['name']['first'], // Changed: Parse UserName correctly
+            last: e['name']['last'], // Changed: Parse UserName correctly
+          ),
           gender: e['gender'],
           email: e['email'],
           phone: e['phone'],
-          //cell: e['cell'],
-          //dob: e['dob'],
-          location: e['location'],
+          location: e['location'], // No change (assume it's parsed as a Map)
           nat: e['nat'],
         );
       }).toList();
