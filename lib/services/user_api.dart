@@ -4,6 +4,7 @@ import 'package:rest_api/model/user.dart';
 
 class UserApi {
   static Future<List<User>> fetchUsers() async {
+
     print("Fetch User Called");
     const url = 'https://randomuser.me/api/?results=20';
     final uri = Uri.parse(url);
