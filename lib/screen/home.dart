@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final userApi = UserApi(); // Instantiate UserApi
       final fetchedUsers =
-          await userApi.fetchUsers(); // Fetch users using UserApi
+      await userApi.fetchUsers(); // Fetch users using UserApi
       setState(() {
         users = fetchedUsers;
       });
@@ -35,53 +35,58 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Rest API Call"),
+        title: Center(child: const Text("Rest API Call")),
       ),
       body: users.isEmpty
           ? const Center(
-              child: Text("No data available. Tap the button to load users."))
+          child: Text("No data available. Tap the button to load users."))
           : ListView.builder(
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final user = users[index];
-                final picture =
-                    user.picture['large']; // Changed: Access picture properly
-                final fullName =
-                    '${user.name.title} ${user.name.first} ${user.name.last}'; // Changed: Use user.name fields
-                final color = user.gender == 'female'
-                    ? Colors.deepOrange
-                    : Colors.pinkAccent;
-                final email = user.email;
-                final phone = user.phone;
-                final location =
-                    '${user.location['city']}, ${user.location['country']}'; // Changed: Access location as map
-                final nat = user.nat;
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          final user = users[index];
+          final picture =
+          user.picture['large']; // Changed: Access picture properly
+          final fullName =
+              '${user.name.title} ${user.name.first} ${user.name.last}'; // Changed: Use user.name fields
+          final color = user.gender == 'female'
+              ? Colors.deepOrange
+              : Colors.pinkAccent;
+          final email = user.email;
+          final phone = user.phone;
+          final location =
+              '${user.location['city']}, ${user.location['country']}'; // Changed: Access location as map
+          final nat = user.nat;
 
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage:
-                        NetworkImage(picture), // Changed: Use profile picture
-                  ),
-                  title: Text(
-                    fullName,
-                    style: TextStyle(color: color),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Email: $email'), // Added: Display email
-                      Text('Phone: $phone'), // Added: Display phone
-                      Text('Location: $location'), // Added: Display location
-                    ],
-                  ),
-                  isThreeLine: true, // Changed: Enable multi-line subtitle
-                );
-              },
+          return ListTile(
+            leading: CircleAvatar(
+              backgroundImage:
+              NetworkImage(picture), // Changed: Use profile picture
             ),
+            title: Text(
+              fullName,
+              style: TextStyle(color: color),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Email: $email'), // Added: Display email
+                Text('Phone: $phone'), // Added: Display phone
+                Text('Location: $location'), // Added: Display location
+              ],
+            ),
+            isThreeLine: true, // Changed: Enable multi-line subtitle
+          );
+        },
+      ),
+
+
+
       floatingActionButton: FloatingActionButton(
         onPressed: fetchUsers,
         child: const Icon(Icons.download),
       ),
+
+
     );
   }
 }
